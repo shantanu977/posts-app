@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="/stylesheets/dash.css">
+</head>
+<body>
+
+<h1>All Posts</h1>
+<a href="/profile">My Profile</a> | <a href="/logout">Logout</a>
+
+<% posts.forEach(post => { %>
+  <div class="post">
+    <div class="meta">
+      Posted by <strong><%= post.user.name %></strong> (@<%= post.user.username %>)
+    </div>
+    <div><%= post.content %></div>
+    <div class="actions">
+      <a href="/like/<%= post._id %>">
+        ❤️ Like (<%= post.likes.length %>)
+      </a>
+      
+      <% if (post.user._id.toString() === currentUserId.toString()) { %>
+        | <a href="/delete/<%= post._id %>">🗑️ Delete</a>
+      <% } %>
+    </div>
+  </div>
+<% }) %>
+
+</body>
+</html>

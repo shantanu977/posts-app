@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/stylesheets/profile.css" />
+  <title>Profile</title>
+</head>
+<body>
+
+  <!-- Profile Info -->
+  <div class="profile-container">
+    <h2>Name: <%= user.name %></h2>
+    <h2>Age: <%= user.age %></h2>
+    <h2>Email: <%= user.email %></h2>
+  </div>
+
+  <!-- Create Post Form -->
+  <div class="create_post">
+    <form action="/createpost" method="post">
+      <textarea name="content" placeholder="What's in your mind?" required></textarea>
+      <button type="submit">Create</button>
+    </form>
+  </div>
+
+  <!-- Posts -->
+  <div class="posts">
+    <h5>Your Posts:</h5>
+
+    <% if (posts.length === 0) { %>
+      <p>No Posts Yet</p>
+    <% } else { %>
+      <% posts.forEach(post => { %>
+        <div class="post">
+          <p><%= post.content %></p>
+          <small><%= post.date.toDateString() %></small>
+          <p><%= post.likes.length %> Likes</p><br />
+          <a href="/like/<%= post._id %>"> Likes</a>
+          <a href="/edit/<%= post._id %>">Edit</a>
+          <a href="/delete/<%= post._id %>">Delete</a>
+        </div>
+      <% }) %>
+    <% } %>
+  </div>
+
+  <!-- Logout -->
+  <a href="/logout" class="logout-btn">Logout</a>
+
+</body>
+</html>

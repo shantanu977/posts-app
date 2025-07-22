@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>User Registration</title>
+  <link rel="stylesheet" href="/stylesheets/index.css">
+</head>
+<body>
+  
+  <form action="/register" method="POST">
+    <label>Username:</label><br>
+    <input type="text" name="username" required><br>
+
+    <label>Name:</label><br>
+    <input type="text" name="name" required><br>
+
+    <label>Age:</label><br>
+    <input type="number" name="age" required><br>
+
+    <label>Email:</label><br>
+    <input type="email" name="email" required><br>
+
+    <label>Password:</label><br>
+    <input type="password" name="password" required><br>
+
+    <button type="submit">Register</button>
+  </form>
+  <a href="/login">Already Have Account ? Login</a>
+</body>
+</html>
