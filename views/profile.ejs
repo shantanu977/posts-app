@@ -8,14 +8,15 @@
 </head>
 <body>
 
-  <!-- Profile Info -->
+
   <div class="profile-container">
     <h2>Name: <%= user.name %></h2>
     <h2>Age: <%= user.age %></h2>
     <h2>Email: <%= user.email %></h2>
+    <a href="/dashboard">Dashboard</a>
   </div>
 
-  <!-- Create Post Form -->
+
   <div class="create_post">
     <form action="/createpost" method="post">
       <textarea name="content" placeholder="What's in your mind?" required></textarea>
@@ -23,7 +24,7 @@
     </form>
   </div>
 
-  <!-- Posts -->
+
   <div class="posts">
     <h5>Your Posts:</h5>
 
@@ -43,7 +44,7 @@
     <% } %>
   </div>
 
-  <!-- Logout -->
+  
   <a href="/logout" class="logout-btn">Logout</a>
 
 </body>

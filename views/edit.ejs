@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/edit.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="edit_post">
+    <form action="/editpost" method="post">
+      <input type="hidden" name="postid" value="<%= post._id %>">
+      <textarea name="content" placeholder="What's in your mind?" required><%= post.content %></textarea>
+      <button type="submit">Edit</button>
+    </form>
+  </div>
+</body>
+</html>

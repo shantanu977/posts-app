@@ -7,7 +7,7 @@
 <body>
 
 <h1>All Posts</h1>
-<a href="/profile">My Profile</a> | <a href="/logout">Logout</a>
+<a href="/profile">My Profile</a> | <a href="/logout">Logout</a><br>
 
 <% posts.forEach(post => { %>
   <div class="post">
@@ -21,7 +21,10 @@
       </a>
       
       <% if (post.user._id.toString() === currentUserId.toString()) { %>
-        | <a href="/delete/<%= post._id %>">🗑️ Delete</a>
+        | <a href="/delete/<%= post._id %>">Delete</a>
+      <% } %>
+       <% if (post.user._id.toString() === currentUserId.toString()) { %>
+        | <a href="/edit/<%= post._id %>">Edit</a>
       <% } %>
     </div>
   </div>

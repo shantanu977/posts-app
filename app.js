@@ -159,6 +159,23 @@ app.get("/delete/:postid", isLoggedIn, async function(req, res) {
     res.redirect("/profile");
 });
 
+app.get("/edit/:postid",isLoggedIn,async function (req,res) {
+    const post = await postModel.findById(req.params.postid);
+
+    res.render("edit",{post : post});
+})
+
+app.post("/editpost",isLoggedIn,async function(req,res) {
+    const post = await postModel.findById(req.body.postid);
+
+    if(post && post.user.toString()==req.user.userid)
+    {
+        post.content=req.body.content;
+        await post.save();
+    }
+    res.redirect("/profile");
+})
+
 app.listen(3000,function(req,res){
     console.log("Running");
 });
