@@ -10,10 +10,13 @@
 
 
   <div class="profile-container">
+    <div class="profile-pic">
+      <img src="<%=user.pic %>" alt="">
+    </div>
     <h2>Name: <%= user.name %></h2>
-    <h2>Age: <%= user.age %></h2>
     <h2>Email: <%= user.email %></h2>
     <a href="/dashboard">Dashboard</a>
+    <a href="/updateprof/<%= user.email %>">Update Profile</a>
   </div>
 
 

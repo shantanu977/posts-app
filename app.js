@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
+const upload = require("./config/multerconfig");
 
 
 const app = express();
@@ -23,7 +24,7 @@ app.get("/login",function(req,res){
     res.render("login");
 })
 
-app.post("/register",async function(req,res){
+app.post("/register",upload.single("pic"),async function(req,res){
 
     let already = await userModel.findOne({email : req.body.email});
     if(already) 
@@ -37,6 +38,7 @@ app.post("/register",async function(req,res){
         name : req.body.name,
         age : req.body.age,
         email : req.body.email,
+        pic : "/images/uploads/" + req.file.filename,
         password : result
     })
     let Token = jwt.sign({email : user.email , userid : user._id},"shh");
@@ -107,6 +109,17 @@ function isLoggedIn(req,res,next){
     }
 }
 
+app.get("/updateprof/:email",isLoggedIn, async function(req,res){
+    let user = await userModel.findOne({email : req.params.email});
+
+    if (!user) {
+    return res.status(404).send("User not found");
+  }
+
+
+    res.render("update",{user : user});
+})
+
 app.get("/dashboard", isLoggedIn, async function(req, res) {
 
     const posts = await postModel.find().populate("user");
@@ -175,6 +188,36 @@ app.post("/editpost",isLoggedIn,async function(req,res) {
     }
     res.redirect("/profile");
 })
+
+app.post("/updateuser/:email", upload.single("pic"), async function(req, res) {
+    try {
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+        const updateData = {
+            username: req.body.username,
+            name: req.body.name,
+            age: req.body.age,
+            email: req.body.email,
+            password: hashedPassword
+        };
+
+        if (req.file) {
+            updateData.pic = "/images/uploads/" + req.file.filename;
+        }
+
+        await userModel.findOneAndUpdate(
+            { email: req.params.email },
+            updateData,
+            { new: true }
+        );
+
+        res.redirect("/profile");
+    } catch (err) {
+        console.error("Error updating user:", err);
+        res.status(500).send("Something went wrong");
+    }
+});
+
 
 app.listen(3000,function(req,res){
     console.log("Running");
