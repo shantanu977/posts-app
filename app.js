@@ -7,6 +7,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const upload = require("./config/multerconfig");
+const { title } = require("process");
+const { text } = require("stream/consumers");
 
 
 const app = express();
@@ -24,70 +26,77 @@ app.get("/login",function(req,res){
     res.render("login");
 })
 
-app.post("/register",upload.single("pic"),async function(req,res){
+app.post("/register", upload.single("pic"), async function(req, res) {
+  try {
+    const already = await userModel.findOne({ email: req.body.email });
+    if (already) return res.redirect("/login");
 
-    let already = await userModel.findOne({email : req.body.email});
-    if(already) 
-    {    
-        res.redirect("/login");
-    }
-    else {
-    bcrypt.hash(req.body.password,10,async function(err,result){
-        let user = await userModel.create({
-        username : req.body.username,
-        name : req.body.name,
-        age : req.body.age,
-        email : req.body.email,
-        pic : "/images/uploads/" + req.file.filename,
-        password : result
-    })
-    let Token = jwt.sign({email : user.email , userid : user._id},"shh");
-    res.cookie("token",Token);
+    bcrypt.hash(req.body.password, 10, async function(err, hashedPassword) {
+      const user = await userModel.create({
+        username: req.body.username,
+        name: req.body.name,
+        age: req.body.age,
+        email: req.body.email,
+        password: hashedPassword,
+        pic: req.file ? "/images/uploads/" + req.file.filename : "/images/default.jpg" // <- FIXED
+      });
 
-    const transporter = nodemailer.createTransport({
+      const token = jwt.sign({ email: user.email, userid: user._id }, "shh");
+      res.cookie("token", token);
+
+      const Transport = nodemailer.createTransport({
         service : "gmail",
-        auth :
-        {
+        auth :{
             user : "shantanuubhe9@gmail.com",
             pass : "okvwyvaisdohmlck"
         }
-    })
-
-    const mail ={
-        from : "shantanuubhe9@gmail.com",
-        to : user.email,
-        subject : "Welcome To Posts App",
-        text : `Hello ${user.name},\n\nWelcome to Posts App! We're glad to have you on board.\n\nStart posting and enjoy the experience.\n\n- Team Posts App`
-    }
-
-    await transporter.sendMail(mail);
-    res.redirect("/dashboard");
-    })   
-}
-})
-
-app.post("/set",async function(req,res){
-    let {email,password} = req.body;
-
-    let user = await userModel.findOne({email : email});
-
-    if(!user){
-        return res.redirect("/");
-    }
-
-    bcrypt.compare(password,user.password,function(err,result){
-        
-        if(result){
-            let Token = jwt.sign({email : user.email , userid : user._id},"shh");
-            res.cookie("token",Token);
-            res.redirect("/dashboard");
+        })
+        const mail = {
+            from : "shantanuubhe9@gmail.com",
+            to : req.body.email,
+            subject : "Welcome To Posts - app",
+            text : `Hi ${user.name},\n\nThanks for registering on our Posts App. We're happy to have you!\n\nRegards,\nTeam Posts App`,
         }
-        else{
-            res.redirect("/login");
+      
+        await Transport.sendMail(mail);
+
+      res.redirect("/dashboard");
+    });
+
+  } catch (err) {
+    console.error("Registration Error:", err);
+    res.status(500).send("Something went wrong.");
+  }
+});
+
+app.post("/set", async function(req, res) {
+    const { email, password } = req.body;
+
+    try {
+        const user = await userModel.findOne({ email });
+
+        if (!user) {
+            console.log("User not found");
+            return res.redirect("/login"); // better UX
         }
-    })
-    
-})
+
+        const match = await bcrypt.compare(password, user.password);
+
+        if (!match) {
+            console.log("Incorrect password");
+            return res.redirect("/login");
+        }
+
+        const token = jwt.sign({ email: user.email, userid: user._id }, "shh");
+        res.cookie("token", token);
+        res.redirect("/dashboard");
+
+    } catch (error) {
+        console.error("Login error:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
 
 app.get("/logout",function(req,res){
     res.clearCookie("token");
@@ -110,11 +119,7 @@ function isLoggedIn(req,res,next){
 }
 
 app.get("/updateprof/:email",isLoggedIn, async function(req,res){
-    let user = await userModel.findOne({email : req.params.email});
-
-    if (!user) {
-    return res.status(404).send("User not found");
-  }
+    let user = await userModel.findOne({email : req.params.email})
 
 
     res.render("update",{user : user});

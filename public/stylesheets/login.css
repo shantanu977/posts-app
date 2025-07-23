@@ -1,4 +1,5 @@
-/* Reset default styles */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -7,73 +8,80 @@
 
 body {
   height: 100vh;
-  background: linear-gradient(to right, #e0f7fa, #e0e7ff);
+  background: linear-gradient(135deg, #e3eafc, #ffffff);
+  font-family: 'Inter', sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  padding: 10px;
 }
 
-/* Form container */
+/* Form styling */
 form {
-  background-color: white;
-  padding: 30px 40px;
+  background: #ffffff;
+  padding: 24px 28px;
   border-radius: 12px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
   width: 300px;
-  margin-bottom: 1rem;
 }
 
 /* Labels */
 form label {
-  font-weight: bold;
-  margin-bottom: 5px;
-  color: #333;
   display: block;
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 4px;
 }
 
 /* Inputs */
 form input[type="email"],
 form input[type="password"] {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
+  padding: 9px 10px;
+  margin-bottom: 14px;
+  border-radius: 8px;
   border: 1px solid #ccc;
-  border-radius: 6px;
+  font-size: 14px;
+  background-color: #fdfdfd;
   transition: border-color 0.3s;
 }
 
 form input:focus {
-  border-color: #4f46e5;
+  border-color: #6c5ce7;
   outline: none;
 }
 
-/* Submit button */
+/* Button */
 form button {
   width: 100%;
   padding: 10px;
-  background-color: #4f46e5;
+  background-color: #6c5ce7;
   color: white;
-  font-size: 16px;
+  font-size: 15px;
+  font-weight: 600;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 form button:hover {
-  background-color: #4338ca;
+  background-color: #574b90;
 }
 
 /* Register link */
 a {
-  font-size: 14px;
-  color: #4f46e5;
+  margin-top: 12px;
+  display: block;
+  text-align: center;
+  font-size: 13.5px;
+  color: #6c5ce7;
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 a:hover {
-  color: #3730a3;
+  color: #3d3d9b;
 }
